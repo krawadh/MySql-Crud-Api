@@ -1,0 +1,28 @@
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Build and output files
+build/
+dist/
+coverage/
+
+# Config files
+config/*.local.js
+config/*.local.json
+
+# Other files
+*.swp
+*~
