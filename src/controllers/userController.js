@@ -11,9 +11,9 @@ exports.addUser = async (req, res) => {
     const values = [name, username, email, phone];
     const [results] = await db.execute(insertQuery, values);
     const userRs = results[0];
-    res.status(201).json({ message: "success", userRs });
+    return res.status(201).json({ message: "success", userRs });
   } catch (error) {
-    res.status(500).json("Internal server error");
+    return res.status(500).json("Internal server error");
   }
 
   // 3. Handle success: Respond with a 201 status code and the created user
@@ -32,12 +32,12 @@ exports.getUserById = async (req, res) => {
     const [rows] = await db.execute(query, [id]);
     const userRs = rows[0];
     if (userRs) {
-      res.status(200).json({ message: "success", userRs });
+      return res.status(200).json({ message: "success", userRs });
     } else {
-      res.status(404).json("User not found");
+      return res.status(404).json("User not found");
     }
   } catch (error) {
-    res.status(500).json("Internal server error");
+    return res.status(500).json("Internal server error");
   }
 };
 
@@ -48,9 +48,9 @@ exports.getAllUsers = async (req, res) => {
   try {
     //const usersRs = await User.find();
     const [usersRs] = await db.execute("SELECT * FROM users");
-    res.status(200).json({ message: "success", usersRs });
+    return res.status(200).json({ message: "success", usersRs });
   } catch (error) {
-    res.status(500).json("Internal server error");
+    return res.status(500).json("Internal server error");
   }
 };
 
@@ -73,12 +73,12 @@ exports.updateUserById = async (req, res) => {
     const updates = [name, username, email, phone, id];
     const [userUpdatedRs] = await db.execute(updateQuery, updates);
     if (userUpdatedRs.affectedRows > 0) {
-      res.status(200).json({ message: "User updated", userUpdatedRs });
+      return res.status(200).json({ message: "User updated", userUpdatedRs });
     } else {
-      res.status(404).json("User not found");
+      return res.status(404).json("User not found");
     }
   } catch (error) {
-    res.status(500).json("Internal server error");
+    return res.status(500).json("Internal server error");
   }
 };
 
@@ -94,11 +94,11 @@ exports.deleteUserById = async (req, res) => {
     const deleteQuery = "DELETE FROM users WHERE id = ?";
     const [userDeletedRs] = await db.execute(deleteQuery, [id]);
     if (userDeletedRs.affectedRows > 0) {
-      res.status(200).json({ message: "User deleted", userDeletedRs });
+      return res.status(200).json({ message: "User deleted", userDeletedRs });
     } else {
-      res.status(404).json("User not found");
+      return res.status(404).json("User not found");
     }
   } catch (error) {
-    res.status(500).json("Internal server error");
+    return res.status(500).json("Internal server error");
   }
 };
