@@ -46,7 +46,6 @@ exports.getAllUsers = async (req, res) => {
   // 3. Handle success: Respond with a 200 status code and the user data
   // 4. Handle errors: Respond with appropriate error messages and status codes
   try {
-    //const usersRs = await User.find();
     const [usersRs] = await db.execute("SELECT * FROM users");
     return res.status(200).json({ message: "success", usersRs });
   } catch (error) {
