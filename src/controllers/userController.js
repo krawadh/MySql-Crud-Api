@@ -1,19 +1,26 @@
 // userController.js
 const db = require("../db");
+const bcrypt = require("bcrypt");
+const { handleError } = require("../utils/errorHandler");
 // Create a new user
 exports.addUser = async (req, res) => {
   // Implement user creation logic here
   // 1. Extract user data from the request body (req.body)
-  const { name, username, email, phone } = req.body;
+  const { fname, lname, email, phone } = req.body;
+  const password = "password";
   try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const insertQuery =
-      "INSERT INTO users (name, username, email, phone) VALUES (?,?,?,?)";
-    const values = [name, username, email, phone];
+      "INSERT INTO users (fname, lname, email, password, phone) VALUES (?,?,?,?,?)";
+    const values = [fname, lname, email, hashedPassword, phone];
     const [results] = await db.execute(insertQuery, values);
     const userRs = results[0];
-    return res.status(201).json({ message: "success", userRs });
+    res.status(201).json({ message: "success", results });
   } catch (error) {
-    return res.status(500).json("Internal server error");
+    console.log(error.message);
+    //res.status(500).json("Internal server error");
+    handleError(res, error.message);
   }
 
   // 3. Handle success: Respond with a 201 status code and the created user
@@ -32,12 +39,13 @@ exports.getUserById = async (req, res) => {
     const [rows] = await db.execute(query, [id]);
     const userRs = rows[0];
     if (userRs) {
-      return res.status(200).json({ message: "success", userRs });
+      res.status(200).json({ message: "success", userRs });
     } else {
-      return res.status(404).json("User not found");
+      res.status(404).json("User not found");
     }
   } catch (error) {
-    return res.status(500).json("Internal server error");
+    //return res.status(500).json("Internal server error");
+    handleError(res, error);
   }
 };
 
@@ -47,9 +55,10 @@ exports.getAllUsers = async (req, res) => {
   // 4. Handle errors: Respond with appropriate error messages and status codes
   try {
     const [usersRs] = await db.execute("SELECT * FROM users");
-    return res.status(200).json({ message: "success", usersRs });
+    res.status(200).json({ message: "success", usersRs });
   } catch (error) {
-    return res.status(500).json("Internal server error");
+    //return res.status(500).json("Internal server error");
+    handleError(res, error);
   }
 };
 
@@ -62,22 +71,21 @@ exports.updateUserById = async (req, res) => {
   // 4. Handle success: Respond with a 200 status code and the updated user data
   // 5. Handle errors: Respond with appropriate error messages and status codes
   const id = req.params.id;
-  const { name, username, email, phone } = req.body;
+  const { fname, lname, email, phone } = req.body;
   try {
-    // const userUpdatedRs = await User.findByIdAndUpdate(id, updateNew, {
-    //   new: true,
-    // });
     const updateQuery =
-      "UPDATE users SET name=?, username=?, email=?, phone=? WHERE id = ?";
-    const updates = [name, username, email, phone, id];
+      "UPDATE users SET fname=?, lname=?, email=?, phone=? WHERE id = ?";
+    const updates = [fname, lname, email, phone, id];
     const [userUpdatedRs] = await db.execute(updateQuery, updates);
     if (userUpdatedRs.affectedRows > 0) {
-      return res.status(200).json({ message: "User updated", userUpdatedRs });
+      res.status(200).json({ message: "User updated", userUpdatedRs });
     } else {
-      return res.status(404).json("User not found");
+      res.status(404).json("User not found");
     }
   } catch (error) {
-    return res.status(500).json("Internal server error");
+    console.log(error);
+    // res.status(500).json("Internal server error");
+    handleError(res, error);
   }
 };
 
@@ -93,11 +101,12 @@ exports.deleteUserById = async (req, res) => {
     const deleteQuery = "DELETE FROM users WHERE id = ?";
     const [userDeletedRs] = await db.execute(deleteQuery, [id]);
     if (userDeletedRs.affectedRows > 0) {
-      return res.status(200).json({ message: "User deleted", userDeletedRs });
+      res.status(200).json({ message: "User deleted", userDeletedRs });
     } else {
-      return res.status(404).json("User not found");
+      res.status(404).json("User not found");
     }
   } catch (error) {
-    return res.status(500).json("Internal server error");
+    // res.status(500).json("Internal server error");
+    handleError(res, error);
   }
 };

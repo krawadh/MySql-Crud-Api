@@ -4,6 +4,10 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const profileController = require("../controllers/profileController");
 
-router.post("/", authMiddleware.verifyToken, profileController.createProfile);
-
+// router.post(
+//   "/add",
+//   authMiddleware.verifyToken,
+//   profileController.createProfile
+// );
+router.get("/get", authMiddleware.verifyToken, profileController.getProfile);
 module.exports = router;

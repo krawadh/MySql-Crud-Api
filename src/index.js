@@ -1,10 +1,10 @@
 // index.js
 const app = require("./app");
 //const dotenv = require("dotenv");
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
 
-/*const { port, mongoURI } = require("./config");
-//dotenv.config();
+const { port, mongoURI } = require("./config");
+/*//dotenv.config();
 
 //connect to DB
 // mongoose.set("useCreateIndex", true);
@@ -19,4 +19,6 @@ mongoose
     });
   })
   .catch((err) => console.error("Error connecting to MongoDB:", err));*/
-app.listen(3001, () => console.log("Server running on port 3001...... "));
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

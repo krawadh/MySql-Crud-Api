@@ -10,13 +10,13 @@ app.use(cors());
 //app.use(express.urlencoded({ extended: true }));
 
 // Routes
-//const authRoutes = require("../src/routes/authRoutes");
-//const profileRoutes = require("../src/routes/profileRoutes");
+const authRoutes = require("./routes/authRoutes");
+const profileRoutes = require("../src/routes/profileRoutes");
 //const productRoutes = require("../src/routes/productRoutes");
 const userRoutes = require("./routes/userRoutes.js");
 
-//app.use("/api/auth", authRoutes);
-//app.use("/api/profile", profileRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
 //app.use("/api/product", productRoutes);
 app.use("/api", userRoutes);
 
